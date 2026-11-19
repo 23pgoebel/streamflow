@@ -24,6 +24,7 @@ def plot_streamflow(dates, flows, sites):
     plt.title('Provo River Streamflow Data (2021)', fontsize=12)
     plt.grid(True)
     plt.xticks(rotation=45)
+    plt.savefig("provo_streamflow.png", dpi=150, bbox_inches="tight")
     plt.show()
 
 dates, flows = load_streamflow("June-2021-Provo-River-Streamflow-Rates.csv")
