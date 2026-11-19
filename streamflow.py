@@ -55,3 +55,14 @@ def summarize(dates, flows, sites):
 dates, flows = load_streamflow("June-2021-Provo-River-Streamflow-Rates.csv")
 plot_streamflow(dates, flows, sites)
 summarize(dates, flows, sites)
+
+# Copilot helped me with this. Input statement turns string into a float that can be operated on.
+threshold = float(input("Enter a flow threshold (cfs): "))
+print(f"\nHours above {threshold:.1f} cfs:")
+#For loop runs through each site marking true or false based on threshold
+for column, site in enumerate(sites):
+    #Sums count of true and false values, then multiplies by 0.25 to get hours above threshold
+    readings_above_threshold = np.sum(flows[:, column] > threshold)
+    hours_above_threshold = readings_above_threshold * 0.25
+    # Prints the site and the hours above threshold rounded to 2 decimal places
+    print(f"{site}: {hours_above_threshold:.2f} hours")
