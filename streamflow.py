@@ -27,5 +27,31 @@ def plot_streamflow(dates, flows, sites):
     plt.savefig("provo_streamflow.png", dpi=150, bbox_inches="tight")
     plt.show()
 
+# Had AI help me make the table and file.
+# Excel Returned 131 as the max and 56.95 for the average as gage 10163000.
+def summarize(dates, flows, sites):
+    """Print and save the summary statistics for each gauge."""
+    header = f"{'Gauge':<12}{'Max (cfs)':>10}   {'Date of max':<19}{'Min (cfs)':>10}{'Avg (cfs)':>10}"
+    print(header)
+
+    summary_rows = []
+    for column, site in enumerate(sites):
+        gauge_flows = flows[:, column]
+        max_index = np.argmax(gauge_flows)
+        max_flow = np.max(gauge_flows)
+        min_flow = np.min(gauge_flows)
+        avg_flow = np.mean(gauge_flows)
+        max_date = str(dates[max_index]).replace("T", " ")
+
+        print(f"{site:<12}{max_flow:>10.1f}   {max_date:<19}{min_flow:>10.1f}{avg_flow:>10.1f}")
+        summary_rows.append(
+            f"{site},{max_flow:.1f},{max_date},{min_flow:.1f},{avg_flow:.1f}\n"
+        )
+
+    with open('streamflow_summary.csv', 'w', encoding='utf-8', newline='') as file:
+        file.write("Gauge,Max (cfs),Date of max,Min (cfs),Avg (cfs)\n")
+        file.writelines(summary_rows)
+
 dates, flows = load_streamflow("June-2021-Provo-River-Streamflow-Rates.csv")
 plot_streamflow(dates, flows, sites)
+summarize(dates, flows, sites)
